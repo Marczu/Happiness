@@ -31,7 +31,7 @@ public class QuoteData {
 
     }
 
-    public void getQuotes(){
+    public void getQuotes(final QuoteListAsyncResponse callback){
 
         String url = "https://raw.githubusercontent.com/pdichone/UIUX-Android-Course/master/Quotes.json%20";
 
@@ -52,7 +52,6 @@ public class QuoteData {
                         queueArrayList.add(quote);
 
 
-//                        Log.d("array", queueArrayList.get(i).getQuote());
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -60,8 +59,12 @@ public class QuoteData {
 
                 }
 
+                if (null!= callback) {
+                    callback.processFinished(queueArrayList);
+                }
 
-                Log.d("array", queueArrayList.get(8).getQuote());
+
+//                Log.d("array", queueArrayList.get(8).getQuote());
 
             }
         }, new Response.ErrorListener() {

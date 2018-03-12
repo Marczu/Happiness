@@ -1,76 +1,56 @@
 package com.marcinmejner.happiness;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.marcinmejner.happiness.data.QuoteData;
+import com.marcinmejner.happiness.data.QuoteListAsyncResponse;
+import com.marcinmejner.happiness.data.QuoteViewPagerAdapter;
 import com.marcinmejner.happiness.model.Quote;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private QuoteViewPagerAdapter quoteViewPagerAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        QuoteData quoteData = new QuoteData(this);
+        quoteViewPagerAdapter = new QuoteViewPagerAdapter(getSupportFragmentManager(), getFragments());
+
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(quoteViewPagerAdapter);
 
 
-        quoteData.getQuotes();
+    }
+
+    private List<Fragment> getFragments() {
+        final List<Fragment> fragmentList = new ArrayList<>();
+
+        new QuoteData(MainActivity.this).getQuotes(new QuoteListAsyncResponse() {
+            @Override
+            public void processFinished(ArrayList<Quote> quotes) {
+
+                for (int i = 0; i < quotes.size(); i++) {
+                    QuoteFragment quoteFragment = QuoteFragment.newInstance(quotes.get(i).getQuote(), quotes.get(i).getAuthor());
+                    fragmentList.add(quoteFragment);
+
+                }
+                quoteViewPagerAdapter.notifyDataSetChanged();
+            }
+        });
 
 
-
-
-
-//        String url = "https://raw.githubusercontent.com/pdichone/UIUX-Android-Course/master/Quotes.json%20";
-//
-//        final RequestQueue queue = Volley.newRequestQueue(this);
-//
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-//
-//                for (int i = 0; i < response.length() ; i++) {
-//
-//                    try {
-//                        JSONObject quoteObject = response.getJSONObject(i);
-//                        Quote quote = new Quote();
-//                        quote.setQuote(quoteObject.getString("quote"));
-//                        quote.setAuthor(quoteObject.getString("name"));
-//
-//                        Log.d("quote", quote.getAuthor().toString() + " Cytat:  " + quote.getQuote().toString());
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//
-//
-//        queue.add(jsonArrayRequest);
-
-
-
+        return fragmentList;
     }
 }

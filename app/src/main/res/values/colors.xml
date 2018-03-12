@@ -13,5 +13,13 @@
 <color name="secondary_text">#757575</color>
 <color name="icons">#FFFFFF</color>
 <color name="divider">#BDBDBD</color>
-</resources>
 
+<color name="primary">#00BCD4</color>
+<color name="primary_dark">#0097A7</color>
+<color name="primary_light2">#B2EBF2</color>
+<color name="accent">#607D8B</color>
+<color name="primary_text2">#212121</color>
+<color name="secondary_text2">#757575</color>
+<color name="icons2">#FFFFFF</color>
+<color name="divider2">#BDBDBD</color>
+</resources>
